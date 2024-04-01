@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ojoregedapp/domain/use_case/shared_login.dart';
 
-import '../../data/data_source.dart';
+import '../../data/Data_Source/user_data_source.dart';
 import '../../domain/entity/Login_request_entity.dart';
 
 class Login_Page extends StatelessWidget {
@@ -95,8 +98,11 @@ class Login_Page extends StatelessWidget {
                   // Perform login logic here
                   // For example, navigate to home page4
                   Login model = Login(username: usernameController.text, password: passwordController.text);
+
                   var loginResponse = await UserDataSource.login(model);
-                  Get.offNamed('/Home', arguments: loginResponse);
+                  var token = await sharedLogin.getTokenID();
+                  print(token);
+                  Get.offNamed('/Home');
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,

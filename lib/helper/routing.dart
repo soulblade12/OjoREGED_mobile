@@ -38,5 +38,9 @@ class AppRoutes {
       name: '/Home',
       page: () => Profile_Page(),
     ),
+    GetPage(
+      name: '/userHistory',
+      page: () => Profile_Page(),
+    ),
   ];
 }

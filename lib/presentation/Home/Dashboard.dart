@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ojoregedapp/domain/entity/Subscription_entity.dart';
-import 'package:ojoregedapp/data/Repository/subscription_repository.dart';
+import 'package:ojoregedapp/domain/entity/user_transaction_history.dart'; // Import user_transaction_history entity
+import 'package:ojoregedapp/data/Repository/subscription_repository.dart'; // Assuming Subscription repository (replace if needed)
+import 'package:ojoregedapp/data/Repository/User_repository.dart'; // Import user_functionality_repository
 
 class Profile_Page extends StatefulWidget {
   @override
@@ -9,11 +11,17 @@ class Profile_Page extends StatefulWidget {
 
 class _Profile_Page extends State<Profile_Page> {
   late List<SubscriptionEntity> subscriptions = [];
+  late List<CustomerHistoryEntity> history = []; // Add history list
 
   @override
   void initState() {
     super.initState();
-    _fetchSubscriptions();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    await _fetchSubscriptions();
+    await _fetchHistory();
   }
 
   Future<void> _fetchSubscriptions() async {
@@ -25,24 +33,58 @@ class _Profile_Page extends State<Profile_Page> {
     }
   }
 
+  Future<void> _fetchHistory() async {
+    try {
+      history = await UserFunctionalityRepository.getAllCustomerHistory();
+      setState(() {});
+    } catch (e) {
+      print('Error fetching history: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
       ),
-      body: subscriptions.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : SizedBox(
-        height: 220,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: subscriptions.length,
-          itemBuilder: (context, index) {
-            final subscription = subscriptions[index];
-            return _buildSubscriptionCard(subscription);
-          },
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Subscriptions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: subscriptions.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : SizedBox(
+              height: 220,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: subscriptions.length,
+                itemBuilder: (context, index) {
+                  final subscription = subscriptions[index];
+                  return _buildSubscriptionCard(subscription);
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Text('Transaction History', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Expanded(
+            child: history.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+              itemCount: history.length,
+              itemBuilder: (context, index) {
+                final item = history[index];
+                return ListTile(
+                  title: Text('Order ID: ${item.customerId}'),
+                  subtitle: Text('Time Placed: ${item.timePlaced}'),
+                  // Add more fields as needed
+                );
+              },
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [

@@ -30,10 +30,6 @@ class Login_Page extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
-            Text(
-              "data",
-              style: TextStyle(fontSize: 16),
-            ),
             const SizedBox(height: 30),
             Form(
               child: Column(

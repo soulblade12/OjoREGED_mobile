@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../data/Data_Source/user_data_source.dart';
+import '../../domain/entity/register_user_entity.dart';
 
 class Register extends StatelessWidget {
   Register({Key? key}) : super(key: key);
@@ -76,9 +81,19 @@ class Register extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Perform registration logic
-                // You can access the text from the controllers like _firstNameController.text
+              onPressed: () async {
+                RegisterRequestEntity model = RegisterRequestEntity(
+                  firstName: _firstNameController.text,
+                  middleName: _middleNameController.text,
+                  lastName: _lastNameController.text,
+                  telephone: _telephoneController.text,
+                  emailAddress: _emailAddressController.text,
+                  username: _usernameController.text,
+                  password: _passwordController.text,
+                );
+                var loginResponse = await UserDataSource.register(model);
+                Get.toNamed('/Login');
+
               },
               child: Text('Create Account'),
             ),

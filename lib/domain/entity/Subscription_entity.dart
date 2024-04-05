@@ -11,7 +11,7 @@ String subscriptionEntityToJson(List<SubscriptionEntity> data) => json.encode(Li
 class SubscriptionEntity {
   int subscriptionId;
   String name;
-  int price;
+  double price;
 
   SubscriptionEntity({
     required this.subscriptionId,
